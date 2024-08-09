@@ -9,6 +9,8 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 {
     private readonly string _mudPickerCalendarContentElementId;
     private bool _dateFormatTouched;
+    private readonly PersianCalendar _persianCalendar = new PersianCalendar();
+    private readonly string[] _solarMonths = { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
 
     protected MudJalaliBaseDatePicker() : base(new DefaultConverter<DateTime?>
     {
@@ -426,8 +428,9 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     /// <param name="year"></param>
     protected virtual Task OnYearClickedAsync(int year)
     {
+        var gregorianYear = _persianCalendar.ToDateTime(year, 1, 1, 0, 0, 0, 0).Year;
         var current = GetMonthStart(0);
-        PickerMonth = new DateTime(year, current.Month, 1, Culture.Calendar);
+        PickerMonth = new DateTime(gregorianYear, current.Month, 1, Culture.Calendar);
         var nextView = GetNextView();
         if (nextView != null)
         {
@@ -563,15 +566,15 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private int GetMinYear()
     {
         if (MinDate.HasValue)
-            return Culture.Calendar.GetYear(MinDate.Value);
-        return Culture.Calendar.GetYear(DateTime.Today) - 100;
+            return _persianCalendar.GetYear(MinDate.Value);
+        return _persianCalendar.GetYear(DateTime.Today) - 100;
     }
 
     private int GetMaxYear()
     {
         if (MaxDate.HasValue)
-            return Culture.Calendar.GetYear(MaxDate.Value);
-        return Culture.Calendar.GetYear(DateTime.Today) + 100;
+            return _persianCalendar.GetYear(MaxDate.Value);
+        return _persianCalendar.GetYear(DateTime.Today) + 100;
     }
 
     private string GetYearClasses(int year)
@@ -613,14 +616,20 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 
     private string GetAbbreviatedMonthName(DateTime month)
     {
-        var calendarMonth = Culture.Calendar.GetMonth(month);
-        return Culture.DateTimeFormat.AbbreviatedMonthNames[calendarMonth - 1];
+        var calenderMonth = _persianCalendar.GetMonth(month);
+        return _solarMonths[calenderMonth - 1];
     }
 
     private string GetMonthName(DateTime month)
     {
-        var calendarMonth = Culture.Calendar.GetMonth(month);
-        return Culture.DateTimeFormat.MonthNames[calendarMonth - 1];
+        var calenderMonth = _persianCalendar.GetMonth(month);
+        return _solarMonths[calenderMonth - 1];
+    }
+    
+    private string GetPersianYear(DateTime year)
+    {
+        var calenderMonth = _persianCalendar.GetYear(year);
+        return _solarMonths[calenderMonth - 1];
     }
 
     private string GetMonthClasses(DateTime month)

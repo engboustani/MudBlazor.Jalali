@@ -6,7 +6,7 @@ using MudBlazor.Utilities;
 
 namespace MudBlazor.Jalali;
 
-public class MudJalaliDatePicker : MudBaseDatePicker
+public class MudJalaliDatePicker : MudJalaliBaseDatePicker
 {
     private DateTime? _selectedDate;
 
