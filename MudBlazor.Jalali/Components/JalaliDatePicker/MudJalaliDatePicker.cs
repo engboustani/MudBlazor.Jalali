@@ -144,8 +144,9 @@ public class MudJalaliDatePicker : MudJalaliBaseDatePicker
     /// <param name="year"></param>
     protected override async Task OnYearClickedAsync(int year)
     {
+        var gregorianYear = _persianCalendar.ToDateTime(year, 1, 1, 0, 0, 0, 0).Year;
         var current = GetMonthStart(0);
-        PickerMonth = new DateTime(year, Culture.Calendar.GetMonth(current), 1, Culture.Calendar);
+        PickerMonth = new DateTime(gregorianYear, Culture.Calendar.GetMonth(current), 1, Culture.Calendar);
         var nextView = GetNextView();
         if (nextView == null)
         {
@@ -153,7 +154,7 @@ public class MudJalaliDatePicker : MudJalaliBaseDatePicker
                 //everything has to be set because a value could already defined -> fix values can be ignored as they are set in submit anyway
                 new DateTime(_selectedDate.Value.Year, _selectedDate.Value.Month, _selectedDate.Value.Day, _selectedDate.Value.Hour, _selectedDate.Value.Minute, _selectedDate.Value.Second, _selectedDate.Value.Millisecond, _selectedDate.Value.Kind)
                 //We can assume month and day here, as they were not set yet
-                : new DateTime(year, 1, 1, Culture.Calendar);
+                : new DateTime(gregorianYear, 1, 1, Culture.Calendar);
             await SubmitAndCloseAsync();
         }
         else

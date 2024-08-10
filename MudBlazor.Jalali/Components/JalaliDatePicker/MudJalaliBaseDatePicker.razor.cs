@@ -9,7 +9,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 {
     private readonly string _mudPickerCalendarContentElementId;
     private bool _dateFormatTouched;
-    private readonly PersianCalendar _persianCalendar = new PersianCalendar();
+    protected readonly PersianCalendar _persianCalendar = new PersianCalendar();
     private readonly string[] _solarMonths = { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
 
     protected MudJalaliBaseDatePicker() : base(new DefaultConverter<DateTime?>
@@ -315,13 +315,23 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     /// </summary>
     protected DateTime GetMonthStart(int month)
     {
-        var monthStartDate = _picker_month ?? DateTime.Today.StartOfMonth(Culture);
+        DateTime monthStartDate;
+        if (_picker_month is not null)
+        {
+            monthStartDate = _persianCalendar.ToDateTime(_persianCalendar.GetYear(_picker_month.Value),
+                _persianCalendar.GetMonth(_picker_month.Value), 1, 0, 0, 0, 0);
+        }
+        else
+        {
+            monthStartDate = _persianCalendar.ToDateTime(_persianCalendar.GetYear(DateTime.Today),
+                _persianCalendar.GetMonth(DateTime.Today), 1, 0, 0, 0, 0);
+        }
         // Return the min supported datetime of the calendar when this is year 1 and first month!
         if (_picker_month is { Year: 1, Month: 1 })
         {
             return Culture.Calendar.MinSupportedDateTime;
         }
-        return Culture.Calendar.AddMonths(monthStartDate, month);
+        return _persianCalendar.AddMonths(monthStartDate, month);
     }
 
     /// <summary>
@@ -499,12 +509,17 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 
     protected string FormatTitleDate(DateTime? date)
     {
-        return date?.ToString(TitleDateFormat ?? "ddd, dd MMM", Culture) ?? "";
+        if(date is null)
+            return string.Empty;
+        var persianYear = _persianCalendar.GetYear(date ?? DateTime.Now);
+        var persianMonth = _persianCalendar.GetMonth(date ?? DateTime.Now);
+        var persianDay = _persianCalendar.GetDayOfMonth(date ?? DateTime.Now);
+        return PersianWord.ConvertToPersianNumber($"{persianDay} {_solarMonths[persianMonth - 1]}");
     }
 
     protected string GetFormattedYearString()
     {
-        return GetMonthStart(0).ToString("yyyy", Culture);
+        return PersianWord.ConvertToPersianNumber(_persianCalendar.GetYear(GetMonthStart(0)).ToString());
     }
 
     private void OnPreviousMonthClick()
@@ -608,10 +623,10 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private IEnumerable<DateTime> GetAllMonths()
     {
         var current = GetMonthStart(0);
-        var calendarYear = Culture.Calendar.GetYear(current);
-        var firstOfCalendarYear = Culture.Calendar.ToDateTime(calendarYear, 1, 1, 0, 0, 0, 0);
-        for (var i = 0; i < Culture.Calendar.GetMonthsInYear(calendarYear); i++)
-            yield return Culture.Calendar.AddMonths(firstOfCalendarYear, i);
+        var calendarYear = _persianCalendar.GetYear(current);
+        var firstOfCalendarYear =  _persianCalendar.ToDateTime(calendarYear, 1, 1, 0, 0, 0, 0);
+        for (var i = 0; i < 12; i++)
+            yield return _persianCalendar.AddMonths(firstOfCalendarYear, i);
     }
 
     private string GetAbbreviatedMonthName(DateTime month)
@@ -628,8 +643,8 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     
     private string GetPersianYear(DateTime year)
     {
-        var calenderMonth = _persianCalendar.GetYear(year);
-        return _solarMonths[calenderMonth - 1];
+        var calenderYear = _persianCalendar.GetYear(year);
+        return PersianWord.ConvertToPersianNumber(calenderYear.ToString());
     }
 
     private string GetMonthClasses(DateTime month)

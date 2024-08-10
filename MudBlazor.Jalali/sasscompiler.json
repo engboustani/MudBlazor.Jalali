@@ -1,0 +1,5 @@
+{
+  "SourceFolder": "Styles/MudBlazor.Jalali.scss",
+  "TargetFolder": "wwwroot/MudBlazor.Jalali.min.css",
+  "Arguments": "--style=compressed --no-source-map"
+}

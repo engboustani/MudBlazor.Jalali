@@ -10,7 +10,7 @@
     protected override RenderFragment PickerContent =>
     @<CascadingValue Value="@this" IsFixed="true">
         <MudPickerToolbar Class="mud-picker-datepicker-toolbar" ShowToolbar="@ShowToolbar" Orientation="@Orientation" PickerVariant="@PickerVariant" Color="@Color">
-            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="mud-button-year" OnClick="OnYearClick">@GetFormattedYearString()</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="mud-button-year vazirmatn" OnClick="OnYearClick">@GetFormattedYearString()</MudButton>
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="mud-button-date" OnClick="OnFormattedDateClick">@GetTitleDateString()</MudButton>
         </MudPickerToolbar>
         <MudPickerContent>
@@ -33,8 +33,8 @@
                                 @for (int i = GetMinYear(); i <= GetMaxYear(); i++)
                                 {
                                     var year = i;
-                                    <div class="mud-picker-year" id="@(_componentId + year)" @onclick="(async () => await OnYearClickedAsync(year))" @onclick:stopPropagation="true">
-                                        <MudText Typo="@GetYearTypo(year)" Class="@GetYearClasses(year)">@year</MudText>
+                                    <div class="mud-picker-year vazirmatn" id="@(_componentId + year)" @onclick="(async () => await OnYearClickedAsync(year))" @onclick:stopPropagation="true">
+                                        <MudText Typo="@GetYearTypo(year)" Class="@GetYearClasses(year)">@PersianWord.ConvertToPersianNumber(year.ToString())</MudText>
                                     </div>
                                 }
                             </div>
