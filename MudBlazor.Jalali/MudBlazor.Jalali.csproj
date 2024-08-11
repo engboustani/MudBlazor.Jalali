@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
     <PropertyGroup>
-        <PackageId>MudBlazor.Jalali</PackageId>
+        <PackageId>MudBlazorJalali</PackageId>
         <Version>7.6.0</Version>
         <Authors>Hossein Boustani</Authors>
         <Company>Hossein Boustani</Company>
@@ -14,7 +14,7 @@
         <Description>MudBlazor.Jalali is a package that brings the Jalali DatePicker to the MudBlazor UI Kit. This package helps you handle Persian dates using MudBlazor components.</Description>
         <Copyright>(c) Hossein Boustani</Copyright>
         <PackageProjectUrl>https://github.com/engboustani/MudBlazor.Jalali</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/engboustani/MudBlazor.Jalali/blob/main/LICENSE</PackageLicenseUrl>
+        <PackageLicense>https://github.com/engboustani/MudBlazor.Jalali/blob/main/LICENSE</PackageLicense>
         <RepositoryUrl>https://github.com/engboustani/MudBlazor.Jalali</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>ASP.NETCore Blazor MudBlazor Jalali PersianCalender Shamsi</PackageTags>
