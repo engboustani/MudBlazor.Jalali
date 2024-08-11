@@ -13,11 +13,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private readonly string[] _solarMonths = { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
     private string[] _weekDays = { "ش", "ی", "د", "س", "چ", "پ", "ج" };
 
-    protected MudJalaliBaseDatePicker() : base(new DefaultConverter<DateTime?>
-    {
-        Format = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
-        Culture = CultureInfo.CurrentCulture
-    })
+    protected MudJalaliBaseDatePicker() : base(new JalaliConverter())
     {
         AdornmentAriaLabel = "Open Date Picker";
         _mudPickerCalendarContentElementId = Identifier.Create();
