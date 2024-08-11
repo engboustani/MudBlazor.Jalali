@@ -4,19 +4,18 @@ public abstract class PersianWord
 {
     private PersianWord() {}
     
-    public static unsafe string ToPersianString(object? value)
+    public static string ToPersianString(object? value)
     {
         if (value is null)
         {
             return string.Empty;
         }
 
-        var str = value.ToString().AsSpan();
-        var strOut = stackalloc char[str.Length];
+        var chars = value.ToString().ToCharArray();
 
-        for (var i = 0; i < str.Length; i++)
+        for (var i = 0; i < chars.Length; i++)
         {
-            var ch = str[i];
+            var ch = chars[i];
             if (ch >= 48 && ch <= 57)
             {
                 ch = (char)(ch + 1728);
@@ -25,10 +24,10 @@ public abstract class PersianWord
             {
                 ch = '/'; // Using '/' character literal instead of casting 47 }
             }
-            strOut[i] = ch;
+            chars[i] = ch;
         }
 
-        return new string(strOut).Replace("ي", "ی").Replace("ك", "ک");
+        return new string(chars).Replace("ي", "ی").Replace("ك", "ک");
     }
     
     public static string ConvertToPersianNumber(string num)
@@ -58,16 +57,15 @@ public abstract class PersianWord
         return new string(chars);
     }
 
-    private static unsafe string ConvertToLatinNumber(string num)
+    private static string ConvertToLatinNumber(string num)
     {
         if (string.IsNullOrWhiteSpace(num)) return string.Empty;
 
-        var str = num.AsSpan();
-        var strOut = stackalloc char[str.Length];
+        var chars = num.ToCharArray();
 
-        for (var i = 0; i < str.Length; i++)
+        for (var i = 0; i < chars.Length; i++)
         {
-            strOut[i] = str[i] switch
+            chars[i] = chars[i] switch
             {
                 '\u06F0' or '\u0660' => '0',
                 '\u06F1' or '\u0661' => '1',
@@ -79,10 +77,10 @@ public abstract class PersianWord
                 '\u06F7' or '\u0667' => '7',
                 '\u06F8' or '\u0668' => '8',
                 '\u06F9' or '\u0669' => '9',
-                _ => str[i]
+                _ => chars[i]
             };
         }
 
-        return new string(strOut);
+        return new string(chars);
     }
 }
