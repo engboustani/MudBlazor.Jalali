@@ -11,6 +11,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private bool _dateFormatTouched;
     protected readonly PersianCalendar _persianCalendar = new PersianCalendar();
     private readonly string[] _solarMonths = { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
+    private string[] _weekDays = { "ش", "ی", "د", "س", "چ", "پ", "ج" };
 
     protected MudJalaliBaseDatePicker() : base(new DefaultConverter<DateTime?>
     {
@@ -100,7 +101,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     /// </remarks>
     [Parameter]
     [Category(CategoryTypes.FormComponent.PickerBehavior)]
-    public DayOfWeek? FirstDayOfWeek { get; set; } = null;
+    public DayOfWeek? FirstDayOfWeek { get; set; } = DayOfWeek.Saturday;
 
     /// <summary>
     /// The current month shown in the date picker.
@@ -339,15 +340,25 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     /// </summary>
     protected DateTime GetMonthEnd(int month)
     {
-        var monthStartDate = _picker_month ?? DateTime.Today.StartOfMonth(Culture);
-        return Culture.Calendar.AddMonths(monthStartDate, month).EndOfMonth(Culture);
+        DateTime monthStartDate;
+        if (_picker_month is not null)
+        {
+            monthStartDate = _persianCalendar.ToDateTime(_persianCalendar.GetYear(_picker_month.Value),
+                _persianCalendar.GetMonth(_picker_month.Value), 1, 0, 0, 0, 0);
+        }
+        else
+        {
+            monthStartDate = _persianCalendar.ToDateTime(_persianCalendar.GetYear(DateTime.Today),
+                _persianCalendar.GetMonth(DateTime.Today), 1, 0, 0, 0, 0);
+        }
+        return _persianCalendar.AddMonths(monthStartDate, month + 1).AddDays(-1);
     }
 
     protected DayOfWeek GetFirstDayOfWeek()
     {
         if (FirstDayOfWeek.HasValue)
             return FirstDayOfWeek.Value;
-        return Culture.DateTimeFormat.FirstDayOfWeek;
+        return DayOfWeek.Saturday;
     }
 
     /// <summary>
@@ -380,8 +391,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
         if (week_first.Month != month_first.Month && week_first.AddDays(6).Month != month_first.Month)
             return "";
 
-        return Culture.Calendar.GetWeekOfYear(week_first,
-            Culture.DateTimeFormat.CalendarWeekRule, FirstDayOfWeek ?? Culture.DateTimeFormat.FirstDayOfWeek).ToString();
+        return _persianCalendar.GetWeekOfYear(week_first, CalendarWeekRule.FirstDay, FirstDayOfWeek ?? DayOfWeek.Saturday).ToString();
     }
 
     protected virtual OpenTo? GetNextView()
@@ -438,9 +448,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     /// <param name="year"></param>
     protected virtual Task OnYearClickedAsync(int year)
     {
-        var gregorianYear = _persianCalendar.ToDateTime(year, 1, 1, 0, 0, 0, 0).Year;
-        var current = GetMonthStart(0);
-        PickerMonth = new DateTime(gregorianYear, current.Month, 1, Culture.Calendar);
+        PickerMonth = _persianCalendar.ToDateTime(year, 1, 1, 0, 0, 0, 0);
         var nextView = GetNextView();
         if (nextView != null)
         {
@@ -484,8 +492,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     /// </summary>
     protected IEnumerable<string> GetAbbreviatedDayNames()
     {
-        var dayNamesNormal = Culture.DateTimeFormat.AbbreviatedDayNames;
-        var dayNamesShifted = Shift(dayNamesNormal, (int)GetFirstDayOfWeek());
+        var dayNamesShifted = Shift(_weekDays, (int)GetFirstDayOfWeek() - 6);
         return dayNamesShifted;
     }
 
@@ -502,7 +509,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 
     protected string GetMonthName(int month)
     {
-        return GetMonthStart(month).ToString(Culture.DateTimeFormat.YearMonthPattern, Culture);
+        return _solarMonths[month];// GetMonthStart(month).ToString(Culture.DateTimeFormat.YearMonthPattern, Culture);
     }
 
     protected abstract string GetTitleDateString();
@@ -529,7 +536,8 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
         {
             return;
         }
-        PickerMonth = GetMonthStart(0).AddDays(-1).StartOfMonth(Culture);
+
+        PickerMonth = _persianCalendar.AddMonths(GetMonthStart(0), -1);
     }
 
     private void OnNextMonthClick()
@@ -539,12 +547,12 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 
     private void OnPreviousYearClick()
     {
-        PickerMonth = GetMonthStart(0).AddYears(-1);
+        PickerMonth = _persianCalendar.AddYears(GetMonthStart(0), -1);// GetMonthStart(0).AddYears(-1);
     }
 
     private void OnNextYearClick()
     {
-        PickerMonth = GetMonthStart(0).AddYears(1);
+        PickerMonth = _persianCalendar.AddYears(GetMonthStart(0), 1);
     }
 
     private void OnYearClick()
@@ -595,7 +603,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private string GetYearClasses(int year)
     {
         if (year == Culture.Calendar.GetYear(GetMonthStart(0)))
-            return $"mud-picker-year-selected mud-{Color.ToDescriptionString()}-text";
+            return $"vazirmatn mud-picker-year-selected mud-{Color.ToDescriptionString()}-text";
         return null;
     }
 
@@ -650,7 +658,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private string GetMonthClasses(DateTime month)
     {
         if (Culture.Calendar.GetMonth(GetMonthStart(0)) == Culture.Calendar.GetMonth(month) && !IsMonthDisabled(month))
-            return $"mud-picker-month-selected mud-{Color.ToDescriptionString()}-text";
+            return $"vazirmatn mud-picker-month-selected mud-{Color.ToDescriptionString()}-text";
         return null;
     }
 
@@ -689,7 +697,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 
     private int GetCalendarDayOfMonth(DateTime date)
     {
-        return Culture.Calendar.GetDayOfMonth(date);
+        return _persianCalendar.GetDayOfMonth(date);// Culture.Calendar.GetDayOfMonth(date);
     }
 
     /// <summary>

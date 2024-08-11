@@ -31,16 +31,15 @@ public abstract class PersianWord
         return new string(strOut).Replace("ي", "ی").Replace("ك", "ک");
     }
     
-    public static unsafe string ConvertToPersianNumber(string num)
+    public static string ConvertToPersianNumber(string num)
     {
         if (string.IsNullOrWhiteSpace(num)) return string.Empty;
 
-        var str = num.AsSpan();
-        var strOut = stackalloc char[str.Length];
+        var chars = num.ToCharArray();
 
-        for (var i = 0; i < str.Length; i++)
+        for (var i = 0; i < chars.Length; i++)
         {
-            strOut[i] = str[i] switch
+            chars[i] = chars[i] switch
             {
                 '0' or '\u0660' => '\u06F0',
                 '1' or '\u0661' => '\u06F1',
@@ -52,11 +51,11 @@ public abstract class PersianWord
                 '7' or '\u0667' => '\u06F7',
                 '8' or '\u0668' => '\u06F8',
                 '9' or '\u0669' => '\u06F9',
-                _ => str[i]
+                _ => chars[i]
             };
         }
 
-        return new string(strOut);
+        return new string(chars);
     }
 
     private static unsafe string ConvertToLatinNumber(string num)
