@@ -1,10 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
     <PropertyGroup>
+        <PackageId>MudBlazor.Jalali</PackageId>
+        <Version>7.6.0</Version>
+        <Authors>Hossein Boustani</Authors>
+        <Company>Hossein Boustani</Company>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
