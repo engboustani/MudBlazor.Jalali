@@ -32,7 +32,7 @@ Using the MudBlazor.Jalali components is straightforward. Simply replace the sta
 ## Contributing
 We welcome contributions to the MudBlazor.Jalali project! If you have any ideas, bug fixes, or new features, please feel free to open an issue or submit a pull request.
 
-##License
+## License
 MudBlazor.Jalali is licensed under the MIT License.
 
 **Let's build a great Jalali date picker component library together!**
