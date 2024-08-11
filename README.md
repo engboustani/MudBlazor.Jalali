@@ -2,6 +2,8 @@
 
 **MudBlazor.Jalali** is a comprehensive date picker component library built on top of the popular MudBlazor UI framework, specifically designed for Iranian (Persian) users who require Jalali calendar functionality.
 
+<img width="423" alt="Screenshot" src="https://github.com/user-attachments/assets/81954ea5-42b4-4759-8c54-f0c3e4dc2df0">
+
 ## Installation
 
 To install the MudBlazor.Jalali package, use the following command in your .NET project:
