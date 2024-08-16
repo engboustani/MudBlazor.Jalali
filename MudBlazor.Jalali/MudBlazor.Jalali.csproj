@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageId>MudBlazorJalali</PackageId>
-        <Version>7.6.0</Version>
+        <Version>7.6.1</Version>
         <Authors>Hossein Boustani</Authors>
         <Company>Hossein Boustani</Company>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
