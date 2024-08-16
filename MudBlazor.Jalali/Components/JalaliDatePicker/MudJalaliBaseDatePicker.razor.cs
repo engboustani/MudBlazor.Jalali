@@ -505,7 +505,8 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
 
     protected string GetMonthName(int month)
     {
-        return _solarMonths[month];// GetMonthStart(month).ToString(Culture.DateTimeFormat.YearMonthPattern, Culture);
+        var calenderMonth = _persianCalendar.GetMonth(GetMonthStart(month));
+        return _solarMonths[calenderMonth - 1];
     }
 
     protected abstract string GetTitleDateString();
@@ -600,7 +601,7 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     {
         if (year == Culture.Calendar.GetYear(GetMonthStart(0)))
             return $"vazirmatn mud-picker-year-selected mud-{Color.ToDescriptionString()}-text";
-        return null;
+        return "mud-typography mud-typography-subtitle1 vazirmatn";
     }
 
     private string GetCalendarHeaderClasses(int month)
@@ -654,8 +655,8 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private string GetMonthClasses(DateTime month)
     {
         if (Culture.Calendar.GetMonth(GetMonthStart(0)) == Culture.Calendar.GetMonth(month) && !IsMonthDisabled(month))
-            return $"vazirmatn mud-picker-month-selected mud-{Color.ToDescriptionString()}-text";
-        return null;
+            return $"mud-picker-month-selected mud-{Color.ToDescriptionString()}-text vazirmatn";
+        return "mud-typography mud-typography-subtitle1 vazirmatn";
     }
 
     private Typo GetMonthTypo(DateTime month)
@@ -706,5 +707,12 @@ public abstract partial class MudJalaliBaseDatePicker : MudPicker<DateTime?>
     private ValueTask HandleMouseoverOnPickerCalendarDayButton(int tempId)
     {
         return ValueTask.CompletedTask; // JsApiService.UpdateStyleProperty(_mudPickerCalendarContentElementId, "--selected-day", tempId);
+    }
+
+    private string GetDayTextClasses(DateTime selectedDay)
+    {
+        if(selectedDay.DayOfWeek is DayOfWeek.Friday && selectedDay.Date != DateTime.Today)
+            return "vazirmatn red-text text-darken-1 mud-typography mud-typography-body2";
+        return "vazirmatn mud-typography mud-typography-body2 mud-inherit-text";
     }
 }

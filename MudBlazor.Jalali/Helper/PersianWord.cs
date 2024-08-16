@@ -11,21 +11,23 @@ public abstract class PersianWord
             return string.Empty;
         }
 
-        var chars = value.ToString().ToCharArray();
+        var chars = value.ToString()?.ToCharArray();
 
-        for (var i = 0; i < chars.Length; i++)
-        {
-            var ch = chars[i];
-            if (ch >= 48 && ch <= 57)
+        if (chars != null)
+            for (var i = 0; i < chars.Length; i++)
             {
-                ch = (char)(ch + 1728);
+                var ch = chars[i];
+                if (ch >= 48 && ch <= 57)
+                {
+                    ch = (char)(ch + 1728);
+                }
+                else if (ch == 46)
+                {
+                    ch = '/'; // Using '/' character literal instead of casting 47 }
+                }
+
+                chars[i] = ch;
             }
-            else if (ch == 46)
-            {
-                ch = '/'; // Using '/' character literal instead of casting 47 }
-            }
-            chars[i] = ch;
-        }
 
         return new string(chars).Replace("ي", "ی").Replace("ك", "ک");
     }
@@ -34,7 +36,7 @@ public abstract class PersianWord
     {
         if (string.IsNullOrWhiteSpace(num)) return string.Empty;
 
-        var chars = num.ToCharArray();
+        var chars = num.ToCharArray().AsSpan();
 
         for (var i = 0; i < chars.Length; i++)
         {
@@ -61,7 +63,7 @@ public abstract class PersianWord
     {
         if (string.IsNullOrWhiteSpace(num)) return string.Empty;
 
-        var chars = num.ToCharArray();
+        var chars = num.ToCharArray().AsSpan();
 
         for (var i = 0; i < chars.Length; i++)
         {
