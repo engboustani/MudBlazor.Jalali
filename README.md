@@ -24,6 +24,7 @@ Using the MudBlazor.Jalali components is straightforward. Simply replace the sta
 
 ```csharp
 <MudJalaliDatePicker Label="Basic example" />
+<MudJalaliDateRangePicker Label="Range example" PlaceholderStart="Start Date" PlaceholderEnd="End Date" />
 ```
 
 ## Features
@@ -32,6 +33,9 @@ Using the MudBlazor.Jalali components is straightforward. Simply replace the sta
 - **Date Range Picker:** Enables selection of date ranges using the Jalali calendar.
 - **Easy Integration:** Seamlessly integrates with MudBlazor's existing components and styling.
 - **Customization:** Allows for customization of the component's appearance and behavior.
+- **Localization support**
+- **Accessibility**
+- **Performance optimization**
 
 ## Contributing
 We welcome contributions to the MudBlazor.Jalali project! If you have any ideas, bug fixes, or new features, please feel free to open an issue or submit a pull request.
@@ -40,3 +44,9 @@ We welcome contributions to the MudBlazor.Jalali project! If you have any ideas,
 MudBlazor.Jalali is licensed under the MIT License.
 
 **Let's build a great Jalali date picker component library together!**
+
+## Changelog
+### v7.6.1
+- Introduced MudJalaliDateRangePicker component for selecting date ranges in the Jalali calendar.
+- Improved styling consistency and visual appeal of the components.
+- Fixed issues with displaying correct month names in the Jalali calendar.
